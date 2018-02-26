@@ -3,7 +3,6 @@ import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -41,7 +40,6 @@ public class BasicJsonTest {
                 body("results[0].place_id", equalTo("ChIJP3Sa8ziYEmsRUKgyFmh9AQM")).and().
                 header("Server", "scaffolding on HTTPServer2")
         ;
-
     }
 
     @Test
@@ -58,7 +56,6 @@ public class BasicJsonTest {
                 statusCode(200).and().
                 contentType(ContentType.JSON).and().
                 body("status", equalTo("OK"));
-
     }
 
     @Test
@@ -88,6 +85,5 @@ public class BasicJsonTest {
                 statusCode(200).and().
                 contentType(ContentType.JSON).and().
                 body("status", equalTo("OK"));
-
     }
 }

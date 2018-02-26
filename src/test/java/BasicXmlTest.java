@@ -1,13 +1,10 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -47,7 +44,6 @@ public class BasicXmlTest {
                 body("PlaceSearchResponse.result[0].place_id", equalTo("ChIJP3Sa8ziYEmsRUKgyFmh9AQM")).and().
                 header("Server", "scaffolding on HTTPServer2")
         ;
-
     }
 
     @Test
@@ -95,6 +91,5 @@ public class BasicXmlTest {
                 statusCode(200).and().
                 contentType(ContentType.XML).and().
                 body("PlaceAddResponse.status", equalTo("OK"));
-
     }
 }
