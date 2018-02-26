@@ -1,5 +1,9 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Payload {
-    public static String getPostData() {
+    public static String getPostDataJson() {
         return "{" +
                 "\"location\": {" +
                 "\"lat\": -33.8669710," +
@@ -13,5 +17,13 @@ public class Payload {
                 "\"website\": \"http://www.google.com.au/\"," +
                 "\"language\": \"en-AU\"" +
                 "}";
+    }
+
+    public static String getPostDataXml(String path) throws IOException {
+        return Payload.GenerateStringFromResource(path);
+    }
+
+    private static String GenerateStringFromResource(String path) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(path)));
     }
 }
