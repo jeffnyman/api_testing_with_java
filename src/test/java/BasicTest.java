@@ -2,23 +2,36 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 public class BasicTest {
+    private Properties prop = new Properties();
+
+    @Before
+    public void getData() throws IOException {
+        InputStream envProperties = this.getClass().getClassLoader().getResourceAsStream("env.properties");
+        prop.load(envProperties);
+    }
+
     @Test
     public void google_api_get_test() {
-        RestAssured.baseURI = "https://maps.googleapis.com";
+        RestAssured.baseURI = prop.getProperty("HOST");
 
         given().
                 param("location", "-33.8670522,151.1957362").
                 param("radius", "500").
-                param("key", "AIzaSyBPWgf-UpHET6lIQK8NhKMuRwiHa_Ai0JM").
+                param("key", prop.getProperty("KEY")).
 
         when().
-                get("/maps/api/place/nearbysearch/json").
+                get(Resources.placeGetData()).
 
         then().assertThat().
                 statusCode(200).and().
@@ -32,25 +45,13 @@ public class BasicTest {
 
     @Test
     public void google_api_post_test() {
-        RestAssured.baseURI = "https://maps.googleapis.com";
+        RestAssured.baseURI = prop.getProperty("HOST");
 
         given().
-                queryParam("key", "AIzaSyBPWgf-UpHET6lIQK8NhKMuRwiHa_Ai0JM").
-                body("{" +
-                        "\"location\": {" +
-                        "\"lat\": -33.8669710," +
-                        "\"lng\": 151.1958750" +
-                        "}," +
-                        "\"accuracy\": 50," +
-                        "\"name\": \"Google Shoes!\"," +
-                        "\"phone_number\": \"(02) 9374 4000\"," +
-                        "\"address\": \"48 Pirrama Road, Pyrmont, NSW 2009, Australia\"," +
-                        "\"types\": [\"shoe_store\"]," +
-                        "\"website\": \"http://www.google.com.au/\"," +
-                        "\"language\": \"en-AU\"" +
-                        "}").
+                queryParam("key", prop.getProperty("KEY")).
+                body(Payload.getPostData()).
         when().
-                post("/maps/api/place/add/json").
+                post(Resources.placePostData()).
 
         then().assertThat().
                 statusCode(200).and().
@@ -61,25 +62,13 @@ public class BasicTest {
 
     @Test
     public void google_api_delete_test() {
-        RestAssured.baseURI = "https://maps.googleapis.com";
+        RestAssured.baseURI = prop.getProperty("HOST");
 
         Response response = given().
-                queryParam("key", "AIzaSyBPWgf-UpHET6lIQK8NhKMuRwiHa_Ai0JM").
-                body("{" +
-                        "\"location\": {" +
-                        "\"lat\": -33.8669710," +
-                        "\"lng\": 151.1958750" +
-                        "}," +
-                        "\"accuracy\": 50," +
-                        "\"name\": \"Google Shoes!\"," +
-                        "\"phone_number\": \"(02) 9374 4000\"," +
-                        "\"address\": \"48 Pirrama Road, Pyrmont, NSW 2009, Australia\"," +
-                        "\"types\": [\"shoe_store\"]," +
-                        "\"website\": \"http://www.google.com.au/\"," +
-                        "\"language\": \"en-AU\"" +
-                        "}").
+                queryParam("key", prop.getProperty("KEY")).
+                body(Payload.getPostData()).
         when().
-                post("/maps/api/place/add/json").
+                post(Resources.placePostData()).
 
         then().assertThat().
                 extract().response();
@@ -94,12 +83,12 @@ public class BasicTest {
 
         System.out.println(placeId);
 
-        given().queryParam("key", "AIzaSyBPWgf-UpHET6lIQK8NhKMuRwiHa_Ai0JM").
+        given().queryParam("key", prop.getProperty("KEY")).
                 body("{" +
                         "\"place_id\": \"" + placeId + "\"" +
                         "}").
 
-        when().post("/maps/api/place/delete/json").
+        when().post(Resources.placeDeleteData()).
 
         then().assertThat().
                 statusCode(200).and().
