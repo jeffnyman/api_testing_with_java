@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
@@ -38,8 +39,41 @@ public class BasicJsonTest {
                 contentType(ContentType.JSON).and().
                 body("results[0].name", equalTo("Sydney")).and().
                 body("results[0].place_id", equalTo("ChIJP3Sa8ziYEmsRUKgyFmh9AQM")).and().
-                header("Server", "scaffolding on HTTPServer2")
+                header("Server", "scaffolding on HTTPServer2").and().
+                extract().response()
         ;
+    }
+
+    @Test
+    public void google_api_get_results_test() {
+        RestAssured.baseURI = prop.getProperty("HOST");
+
+        Response response = given().
+                param("location", "-33.8670522,151.1957362").
+                param("radius", "500").
+                param("key", prop.getProperty("KEY")).
+
+        when().
+                get(Resources.placeGetDataJson()).
+
+        then().assertThat().
+                statusCode(200).and().
+                contentType(ContentType.JSON).and().
+                body("results[0].name", equalTo("Sydney")).and().
+                body("results[0].place_id", equalTo("ChIJP3Sa8ziYEmsRUKgyFmh9AQM")).and().
+                header("Server", "scaffolding on HTTPServer2").and().
+                extract().response();
+
+        JsonPath json = Utilities.rawToJson(response);
+        int count = json.get("results.size()");
+
+        String resultArray[] = new String[count];
+
+        for (int i = 0; i < count; i++) {
+            resultArray[i] = json.get("results[" + i + "].name");
+        }
+
+        System.out.println(Arrays.toString(resultArray));
     }
 
     @Test
