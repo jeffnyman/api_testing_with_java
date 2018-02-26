@@ -1,0 +1,11 @@
+# IDE Files
+
+.idea/
+*.iml
+
+# Operating System Files
+.DS_Store
+
+# Project Generated Files
+build/
+target/
