@@ -71,8 +71,8 @@ public class BasicJsonTest {
         then().assertThat().
                 extract().response();
 
-        JsonPath x = Utilities.rawToJson(response);
-        String placeId = x.get("place_id");
+        JsonPath json = Utilities.rawToJson(response);
+        String placeId = json.get("place_id");
 
         given().queryParam("key", prop.getProperty("KEY")).
                 body("{" +

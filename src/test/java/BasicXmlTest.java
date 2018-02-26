@@ -77,8 +77,8 @@ public class BasicXmlTest {
         then().assertThat().
                 extract().response();
 
-        XmlPath x = Utilities.rawToXml(response);
-        String placeId = x.get("PlaceAddResponse.place_id");
+        XmlPath xml = Utilities.rawToXml(response);
+        String placeId = xml.get("PlaceAddResponse.place_id");
 
         given().queryParam("key", prop.getProperty("KEY")).
                 body("<PlaceDeleteRequest>" +
